@@ -8,3 +8,6 @@
  */
 
 rootProject.name = "k-pop"
+
+include(":k-pop")
+include(":example-app")

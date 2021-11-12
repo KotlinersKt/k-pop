@@ -161,3 +161,6 @@ gradle-app.setting
 n
 # Ignore Gradle build output directory
 build
+
+
+*.hprof

@@ -2,17 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.31"
-}
 
-repositories {
-    mavenCentral()
+    id("com.android.application") version "7.2.0-alpha04" apply false
 }
 
 allprojects {
-    repositories {
-        mavenCentral()
-    }
-
     tasks {
         withType<KotlinCompile> {
             sourceCompatibility = JavaVersion.VERSION_11.toString()

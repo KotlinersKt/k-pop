@@ -50,6 +50,10 @@ android {
     }
 }
 
+ksp {
+    arg("strict", "false")
+}
+
 dependencies {
     implementation(kotlin("stdlib"))
 

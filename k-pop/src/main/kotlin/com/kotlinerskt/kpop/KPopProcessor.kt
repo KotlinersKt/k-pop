@@ -18,7 +18,7 @@ class KPopProcessor(
             kspLogger.warn(""""strict" option neither set to "true" or "false". Defaulting to "false" """)
 
             "false"
-        }.toBooleanStrictOrNull() ?: false  
+        }.toBooleanStrictOrNull() ?: false
 
         if (strict) kspLogger::error else kspLogger::warn
     }

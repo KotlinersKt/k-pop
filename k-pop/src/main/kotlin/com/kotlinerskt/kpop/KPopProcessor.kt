@@ -11,8 +11,9 @@ typealias LoggerFun = (String, KSNode?) -> Unit
 
 class KPopProcessor(
     kspLogger: KSPLogger,
-    private val options: Map<String, String>
+    private val options: Map<String, String>,
 ) : SymbolProcessor {
+
     private val logger: LoggerFun by lazy {
         val strict = options.getOrElse("strict") {
             kspLogger.warn(""""strict" option neither set to "true" or "false". Defaulting to "false" """)
@@ -33,10 +34,13 @@ class KPopProcessor(
         }.partition { it.second.isEmpty() }
 
         partitionedFiles.second.forEach {
-            logger.invoke("File: `${it.first}` contains `Activity` with wrong `onCreate`: ${it.second}", it.first)
+            logger.invoke(
+                "File: `${it.first}` contains `Activity` with wrong `onCreate`: ${it.second}",
+                it.second.first()
+            )
         }
 
-        return partitionedFiles.first.map { it.first }
+        return emptyList()
     }
 }
 

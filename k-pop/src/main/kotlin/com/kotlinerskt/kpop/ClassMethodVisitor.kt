@@ -18,7 +18,10 @@ class ClassMethodVisitor : KSDefaultVisitor<KSNodesList, KSNodesList>() {
 
     override fun defaultHandler(node: KSNode, data: KSNodesList) = data
 
-    override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: KSNodesList): KSNodesList {
+    override fun visitClassDeclaration(
+        classDeclaration: KSClassDeclaration,
+        data: KSNodesList
+    ): KSNodesList {
         if (classDeclaration.classKind != ClassKind.CLASS) return data
 
         if (classDeclaration.hasSuperType("android.app.Activity")) {
@@ -35,10 +38,16 @@ class ClassMethodVisitor : KSDefaultVisitor<KSNodesList, KSNodesList>() {
         qualifiedName: String,
         kind: ClassKind = ClassKind.CLASS,
     ): Boolean =
+        // class F : [...] <- supertypes
         superTypes.map { it.resolve() }
             .filter { it.declaration is KSClassDeclaration }
             .map { it.declaration as KSClassDeclaration }
             .filter { it.classKind == kind }
-            .any { it.qualifiedName?.asString() == qualifiedName || it.hasSuperType(qualifiedName, kind) }
+            .any {
+                it.qualifiedName?.asString() == qualifiedName || it.hasSuperType(
+                    qualifiedName,
+                    kind
+                )
+            }
 
 }

@@ -48,6 +48,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.0-beta02"
     }
+
+    lint {
+        baseline = null
+    }
 }
 
 ksp {

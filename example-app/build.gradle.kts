@@ -57,6 +57,7 @@ android {
 ksp {
     arg("strict", "false")
     arg("gen_doc", "true")
+    arg("path", project.buildDir.path)
 }
 
 dependencies {

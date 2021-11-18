@@ -4,7 +4,7 @@ import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.visitor.KSDefaultVisitor
 
-class ClassMethodVisitor : KSDefaultVisitor<KSNodesList, KSNodesList>() {
+class ClassMethodVisitor : KSDefaultVisitor<Unit, ClassOffender?>() {
     private val methodsVisitor = ValidateMethodVisitor {
         simpleName.asString().lowercase() == "oncreate"
                 && isOverride()
@@ -16,22 +16,26 @@ class ClassMethodVisitor : KSDefaultVisitor<KSNodesList, KSNodesList>() {
             it.shortName.asString() == Override::class.simpleName
         }
 
-    override fun defaultHandler(node: KSNode, data: KSNodesList) = data
+    override fun defaultHandler(node: KSNode, data: Unit): ClassOffender? = null
 
     override fun visitClassDeclaration(
         classDeclaration: KSClassDeclaration,
-        data: KSNodesList
-    ): KSNodesList {
-        if (classDeclaration.classKind != ClassKind.CLASS) return data
+        data: Unit
+    ): ClassOffender? {
+        if (classDeclaration.classKind != ClassKind.CLASS) return null
 
         if (classDeclaration.hasSuperType("android.app.Activity")) {
-            val hasWrongOnCreateMethod =
-                classDeclaration.getDeclaredFunctions().any { it.accept(methodsVisitor, Unit) }
+            val offenderOnCreateMethods =
+                classDeclaration.getDeclaredFunctions().map { it.accept(methodsVisitor, Unit) }
+                    .filterNotNull().toList()
+            if (offenderOnCreateMethods.isNotEmpty()) return ClassOffender(
+                classDeclaration,
+                offenderOnCreateMethods
+            )
 
-            if (hasWrongOnCreateMethod) return data + listOf(classDeclaration)
         }
 
-        return data
+        return null
     }
 
     private fun KSClassDeclaration.hasSuperType(

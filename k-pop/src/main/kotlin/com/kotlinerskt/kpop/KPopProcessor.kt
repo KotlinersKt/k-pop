@@ -6,6 +6,10 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.PrintWriter
 
 typealias LoggerFun = (String, KSNode?) -> Unit
 
@@ -30,18 +34,30 @@ class KPopProcessor(
         }
 
         val partitionedFiles = resolver.getAllFiles().map {
-            Pair(it, it.accept(fileVisitor, emptyList()))
-        }.partition { it.second.isEmpty() }
+            it.accept(fileVisitor, Unit)
+        }
+            .filterNotNull()
+            .filter { it.offenderClasses.isNotEmpty() }
 
-        partitionedFiles.second.forEach {
+        partitionedFiles.forEach {
             logger.invoke(
-                "File: `${it.first}` contains `Activity` with wrong `onCreate`: ${it.second}",
-                it.second.first()
+                "File: `${it.fileDeclaration}` contains `Activity` with wrong `onCreate`: ${it.offenderClasses}",
+                it.offenderClasses.first().offenderMethods.first()
             )
         }
 
-        val docGenerator = DocGenerator(partitionedFiles)
-        docGenerator.createDoc()
+        val doc = createHtmlDoc(partitionedFiles.toList())
+
+        val path = options.getOrElse("path") { "/Users" }
+
+        logger(doc, null)
+        val file = File("$path/doc.html")
+        file.printWriter()
+            .use {
+                it.append(doc)
+            }
+
+        logger(file.path, null)
 
         return emptyList()
     }

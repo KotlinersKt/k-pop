@@ -1,8 +1,11 @@
+import java.net.URI
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
+//        maven { url = URI("http://dl.bintray.com/steppschuh/Markdown-Generator") }
     }
 }
 

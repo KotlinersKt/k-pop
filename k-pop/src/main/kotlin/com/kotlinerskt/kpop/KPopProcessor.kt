@@ -11,14 +11,15 @@ typealias LoggerFun = (String, KSNode?) -> Unit
 
 class KPopProcessor(
     kspLogger: KSPLogger,
-    private val options: Map<String, String>
+    private val options: Map<String, String>,
 ) : SymbolProcessor {
+
     private val logger: LoggerFun by lazy {
         val strict = options.getOrElse("strict") {
             kspLogger.warn(""""strict" option neither set to "true" or "false". Defaulting to "false" """)
 
             "false"
-        }.toBooleanStrictOrNull() ?: false  
+        }.toBooleanStrictOrNull() ?: false
 
         if (strict) kspLogger::error else kspLogger::warn
     }
@@ -29,14 +30,28 @@ class KPopProcessor(
         }
 
         val partitionedFiles = resolver.getAllFiles().map {
-            Pair(it, it.accept(fileVisitor, emptyList()))
-        }.partition { it.second.isEmpty() }
+            it.accept(fileVisitor, Unit)
+        }
+            .filterNotNull()
+            .filter { it.offenderClasses.isNotEmpty() }
 
-        partitionedFiles.second.forEach {
-            logger.invoke("File: `${it.first}` contains `Activity` with wrong `onCreate`: ${it.second}", it.first)
+        partitionedFiles.forEach {
+            logger.invoke(
+                "File: `${it.fileDeclaration}` contains `Activity` with wrong `onCreate`: ${it.offenderClasses}",
+                it.offenderClasses.first().offenderMethods.first()
+            )
         }
 
-        return partitionedFiles.first.map { it.first }
+        val genDoc = options.getOrElse("gen_doc") { "false" }
+        if (genDoc == "true") {
+            val doc = createHtmlDoc(partitionedFiles.toList())
+            val path = options.getOrElse("path") { "/Users" }
+            createFile(doc, path) { filePath ->
+                logger("K-pop report write: $filePath", null)
+            }
+        }
+
+        return emptyList()
     }
 }
 

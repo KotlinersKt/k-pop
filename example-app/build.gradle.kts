@@ -48,10 +48,16 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.0-beta02"
     }
+
+    lint {
+        baseline = null
+    }
 }
 
 ksp {
     arg("strict", "false")
+    arg("gen_doc", "true")
+    arg("path", project.buildDir.path)
 }
 
 dependencies {

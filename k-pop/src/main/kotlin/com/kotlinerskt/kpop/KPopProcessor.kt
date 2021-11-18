@@ -6,10 +6,6 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.PrintWriter
 
 typealias LoggerFun = (String, KSNode?) -> Unit
 
@@ -46,18 +42,14 @@ class KPopProcessor(
             )
         }
 
-        val doc = createHtmlDoc(partitionedFiles.toList())
-
-        val path = options.getOrElse("path") { "/Users" }
-
-        logger(doc, null)
-        val file = File("$path/doc.html")
-        file.printWriter()
-            .use {
-                it.append(doc)
+        val genDoc = options.getOrElse("gen_doc") { "false" }
+        if (genDoc == "true") {
+            val doc = createHtmlDoc(partitionedFiles.toList())
+            val path = options.getOrElse("path") { "/Users" }
+            createFile(doc, path) { filePath ->
+                logger("K-pop report write: $filePath", null)
             }
-
-        logger(file.path, null)
+        }
 
         return emptyList()
     }

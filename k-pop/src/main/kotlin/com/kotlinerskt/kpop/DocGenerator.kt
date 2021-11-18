@@ -3,10 +3,18 @@ package com.kotlinerskt.kpop
 import com.google.devtools.ksp.symbol.FileLocation
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import java.io.File
 
+fun createFile(document: String, path: String, block: (String) -> Unit) {
+    val file = File("$path/doc.html")
+    file.printWriter()
+        .use {
+            it.append(document)
+        }
+    block("file://${file.path}")
+}
 
 fun createHtmlDoc(partitionedFiles: List<FileOffender>): String {
-
     return buildString {
         appendHTML().html {
             body {

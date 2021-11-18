@@ -56,6 +56,7 @@ android {
 
 ksp {
     arg("strict", "false")
+    arg("gen_doc", "true")
 }
 
 dependencies {

@@ -1,8 +1,15 @@
 package com.kotlinerskt.kpop
 
 import com.google.devtools.ksp.symbol.KSFile
+import kotlinx.html.dom.document
 
-class DocGenerator(val partitionedFiles: Pair<List<Pair<KSFile, KSNodesList>>, List<Pair<KSFile, KSNodesList>>>) {
-    fun createDoc() {
+
+typealias NonCareFiles = List<Pair<KSFile, KSNodesList>>
+typealias OffenderFiles = List<Pair<KSFile, KSNodesList>>
+
+fun createDoc(partitionedFiles: Pair<NonCareFiles, OffenderFiles>) {
+
+    val documentFile = document {
+
     }
 }

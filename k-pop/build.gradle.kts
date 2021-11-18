@@ -13,7 +13,7 @@ tasks {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    
+
     implementation("com.google.devtools.ksp:symbol-processing-api:1.5.31-1.0.0")
-    implementation("net.steppschuh.markdowngenerator:markdowngenerator:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
 }

@@ -5,7 +5,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-//        maven { url = URI("http://dl.bintray.com/steppschuh/Markdown-Generator") }
+        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
     }
 }
 

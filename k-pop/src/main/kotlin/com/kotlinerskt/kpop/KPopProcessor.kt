@@ -40,8 +40,7 @@ class KPopProcessor(
             )
         }
 
-        val docGenerator = DocGenerator(partitionedFiles)
-        docGenerator.createDoc()
+        val docGenerator = createDoc(partitionedFiles)
 
         return emptyList()
     }

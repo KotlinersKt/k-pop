@@ -19,7 +19,7 @@ class KPopProcessor(
             kspLogger.warn(""""strict" option neither set to "true" or "false". Defaulting to "false" """)
 
             "false"
-        }.toBooleanStrictOrNull() ?: false
+        }.toBooleanOr(false)
 
         if (strict) kspLogger::error else kspLogger::warn
     }
@@ -29,23 +29,24 @@ class KPopProcessor(
             it is KSClassDeclaration
         }
 
-        val partitionedFiles = resolver.getAllFiles().map {
-            it.accept(fileVisitor, Unit)
-        }
+        val partitionedFiles = resolver.getAllFiles()
+            .map { it.accept(fileVisitor, Unit) }
             .filterNotNull()
             .filter { it.offenderClasses.isNotEmpty() }
+            .toList()
 
         partitionedFiles.forEach {
-            logger.invoke(
+            logger(
                 "File: `${it.fileDeclaration}` contains `Activity` with wrong `onCreate`: ${it.offenderClasses}",
                 it.offenderClasses.first().offenderMethods.first()
             )
         }
 
         val genDoc = options.getOrElse("gen_doc") { "false" }
-        if (genDoc == "true") {
-            val doc = createHtmlDoc(partitionedFiles.toList())
-            val path = options.getOrElse("path") { "/Users" }
+            .toBooleanOr(false)
+        if (genDoc) {
+            val doc = createHtmlDoc(partitionedFiles)
+            val path = options.getOrElse("path") { TODO("Break or find local project path") }
             createFile(doc, path) { filePath ->
                 logger("K-pop report write: $filePath", null)
             }
@@ -53,5 +54,6 @@ class KPopProcessor(
 
         return emptyList()
     }
-}
 
+    private fun String.toBooleanOr(other: Boolean): Boolean = toBooleanStrictOrNull() ?: other
+}

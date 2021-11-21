@@ -10,8 +10,8 @@ fun createFile(document: String, path: String, block: (String) -> Unit) {
     file.printWriter()
         .use {
             it.append(document)
+            block("file://${file.path}")
         }
-    block("file://${file.path}")
 }
 
 fun createHtmlDoc(partitionedFiles: List<FileOffender>): String {

@@ -46,7 +46,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-beta02"
+        kotlinCompilerExtensionVersion = "1.1.0-beta03"
     }
 
     lint {
@@ -75,6 +75,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.1.0-beta02")
 
     ksp(project(":k-pop"))
+
+    implementation(platform("org.junit:junit-bom:5.8.2"))
+    implementation("org.junit.jupiter:junit-jupiter")
 
     testImplementation("junit:junit:4.13.2")
 

@@ -1,8 +1,9 @@
-package com.kotlinerskt.kpop
+package com.kotlinerskt.kpop.visitors
 
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.visitor.KSDefaultVisitor
+import com.kotlinerskt.kpop.ClassOffender
 
 class ClassMethodVisitor : KSDefaultVisitor<Unit, ClassOffender?>() {
     private val methodsVisitor = ValidateMethodVisitor {

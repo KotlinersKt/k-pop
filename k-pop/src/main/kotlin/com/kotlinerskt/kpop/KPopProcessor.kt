@@ -1,16 +1,21 @@
 package com.kotlinerskt.kpop
 
-import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSNode
+import com.kotlinerskt.kpop.visitors.ClassMethodVisitor
+import com.kotlinerskt.kpop.visitors.PublicSymbolFileVisitor
+import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import com.squareup.kotlinpoet.ksp.writeTo
 
 typealias LoggerFun = (String, KSNode?) -> Unit
 
+@KotlinPoetKspPreview
 class KPopProcessor(
     kspLogger: KSPLogger,
+    private val codeGenerator: CodeGenerator,
     private val options: Map<String, String>,
 ) : SymbolProcessor {
 
@@ -25,6 +30,30 @@ class KPopProcessor(
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        val x = {
+            val y = FileSpec.builder("com.kotlinerskt.kpop.generate", "Testeando")
+                .addImport("org.junit.jupiter.api", "Assertions.assertEquals")
+                .addType(
+                    TypeSpec.classBuilder("Testeando")
+                        .addFunction(
+                            FunSpec.builder("x")
+                                .addAnnotation(
+                                    AnnotationSpec.builder(ClassName("org.junit.jupiter.api", "Test")).build()
+                                )
+                                .addStatement("assertEquals(2, 5)")
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+            y.writeTo(codeGenerator, Dependencies(false))
+        }
+        try {
+            x()
+        } catch (ignored: FileAlreadyExistsException) {
+
+        }
+
         val fileVisitor = PublicSymbolFileVisitor(ClassMethodVisitor()) {
             it is KSClassDeclaration
         }

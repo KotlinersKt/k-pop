@@ -1,4 +1,4 @@
-package com.kotlinerskt.kpop
+package com.kotlinerskt.kpop.visitors
 
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSNode

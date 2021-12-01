@@ -1,4 +1,4 @@
-package com.kotlinerskt.kpop
+package com.kotlinerskt.kpop.visitors
 
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.KSDeclaration
@@ -6,6 +6,8 @@ import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.symbol.KSVisitor
 import com.google.devtools.ksp.visitor.KSDefaultVisitor
+import com.kotlinerskt.kpop.ClassOffender
+import com.kotlinerskt.kpop.FileOffender
 
 class PublicSymbolFileVisitor(
     private val visitor: KSVisitor<Unit, ClassOffender?>,

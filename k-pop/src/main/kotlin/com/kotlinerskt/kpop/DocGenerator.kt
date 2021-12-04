@@ -18,13 +18,11 @@ fun createHtmlDoc(partitionedFiles: List<FileOffender>): String {
     return buildString {
         appendHTML().html {
             body {
+                img(alt = "k-pop", src = "../../kpop_small.png")
+
+                br
+
                 h1 {
-                    +"K-Pop "
-                }
-                p {
-                    +"Kotlin - Processor of programs"
-                }
-                h3 {
                     +"Offender files"
                 }
                 ul {
